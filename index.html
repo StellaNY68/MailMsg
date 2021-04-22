@@ -1,14 +1,320 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mail Test</title>
+
+    <!-- JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.6.0/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js"></script>
+
+    <!-- TOAST Date  -->
+    <script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
+    <script src="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.js"></script>
+
+    <!-- Editor.js -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/26.0.0/inline/ckeditor.js"></script>
+
+    <!-- Moment.js (date 관련) -->
+    <script src="./public/js/moment-with-locales.js"></script>
+
+    <!-- CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css">
+
+    <link rel="stylesheet" href="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.css">
+
+    <style>
+
+    </style>
 </head>
+
 <body>
 
-    Mail Test
-    
+    <div class="container">
+        <form>
+            <div class="mb-3" id="selected1">
+                <label for="select-kind" class="form-label">자동회신 종류</label>
+                <select class="form-select form-select-sm" aria-label=".form-select-sm example" id="select-kind">
+                    <option value="0" selected>Open this select menu</option>
+                    <option value="1">PTO/휴가/Vacation</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="opt-Lang-kor" class="form-label">자동회신 언어</label>
+                <div class="col-4">
+                    <input type="radio" class="btn-check" name="opt-Lang" id="opt-Lang-kor" autocomplete="off"
+                        value="ko" checked disabled>
+                    <label class="btn btn-outline-success btn-sm" for="opt-Lang-kor">Korean</label>
+
+                    <input type="radio" class="btn-check" name="opt-Lang" id="opt-Lang-eng" autocomplete="off"
+                        value="en" disabled>
+                    <label class="btn btn-outline-danger btn-sm" for="opt-Lang-eng">English</label>
+
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="opt-VacDate-one" class="form-label">휴가 일자</label>
+                <div class="row">
+                    <div class="col-4">
+                        <input type="radio" class="btn-check" name="opt-VacDate" id="opt-VacDate-one" autocomplete="off"
+                            value=one checked disabled>
+                        <label class="btn btn-outline-success btn-sm" for="opt-VacDate-one">One Date</label>
+
+                        <input type="radio" class="btn-check" name="opt-VacDate" id="opt-VacDate-Period"
+                            autocomplete="off" value="period" disabled>
+                        <label class="btn btn-outline-danger btn-sm" for="opt-VacDate-Period">Period Date</label>
+
+                    </div>
+                    <div class="col">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="switch-TimeYN" disabled>
+                            <label class="form-check-label" for="switch-TimeYN">시간 포함</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3" id="oneDate">
+                <div class="tui-datepicker-input tui-datetime-input tui-has-focus">
+                    <input type="text" id="date-one" aria-label="Date-Time" disabled>
+                    <span class="tui-ico-date"></span>
+                    <div id="wrapper" style="margin-top: -1px;"></div>
+                </div>
+            </div>
+            <div class="mb-3" id="periodDate" style="display: none;">
+                <div class="tui-datepicker-input tui-datetime-input tui-has-focus">
+                    <input id="startpicker-input" type="text" aria-label="Date">
+                    <span class="tui-ico-date"></span>
+                    <div id="startpicker-container" style="margin-left: -1px;"></div>
+
+                </div>
+                <span>to</span>
+                <div class="tui-datepicker-input tui-datetime-input tui-has-focus">
+                    <input id="endpicker-input" type="text" aria-label="Date">
+                    <span class="tui-ico-date"></span>
+                    <div id="endpicker-container" style="margin-left: -1px;"></div>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="opt-Contact-self" class="form-label">업무 대행자</label>
+                <div class="row">
+                    <div class="col-4">
+                        <input type="radio" class="btn-check" name="opt-Contact" id="opt-Contact-self"
+                            autocomplete="off" value="self" checked disabled>
+                        <label class="btn btn-outline-success btn-sm" for="opt-Contact-self">본인</label>
+
+                        <input type="radio" class="btn-check" name="opt-Contact" id="opt-Contact-other"
+                            autocomplete="off" value="other" disabled>
+                        <label class="btn btn-outline-danger btn-sm" for="opt-Contact-other">대행자</label>
+
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3" id="contact-self">
+                <span>연락처</span>
+                <input type="text" id="txt-self-phone" aria-label="Date-Time" disabled>
+            </div>
+            <!--  -->
+            <div class="mb-3" id="contact-other" style="display: none;">
+                <div class="row">
+                    <div class="col">
+                        <span>이름</span>
+                        <input id="startpicker-input" type="text" aria-label="Date">
+                        <span>연락처</span>
+                        <input id="endpicker-input" type="text" aria-label="Date">
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-3" id="editorArea" style="display: none;">
+                <label for="txtarea-Contents" class="form-label">Example textarea</label>
+                <div id="editor"></div>
+            </div>
+
+            <button type="button" class="btn btn-primary" onclick="getData(editor.getData());" id="BtnCopy"
+                style="display: none;" disabled>Copy</button>
+        </form>
+    </div>
+
+
+    <textarea id="txtarea-Contents" rows="1"
+        style="opacity : 0; width: 1px; height: 1px; margin: 0; padding: 0;"></textarea>
+
+    <script>
+        //moment.locale('ko');
+
+        var datepicker = new tui.DatePicker('#wrapper', {
+            date: new Date(),
+            input: {
+                element: '#date-one',
+                format: 'yyyy-MM-dd'
+            },
+            // timePicker: true
+        });
+
+        var editor;
+        InlineEditor.create(document.querySelector('#editor'),
+            {
+                toolbar: ['|', 'undo', 'redo']
+            }).then(newEditor => {
+                editor = newEditor;
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+        var today = new Date();
+        var picker = tui.DatePicker.createRangePicker({
+            startpicker: {
+                date: today,
+                input: '#startpicker-input',
+                container: '#startpicker-container'
+            },
+            endpicker: {
+                date: today,
+                input: '#endpicker-input',
+                container: '#endpicker-container'
+            },
+            selectableRanges: [
+                [today, new Date(today.getFullYear() + 1, today.getMonth(), today.getDate())]
+            ]
+        });
+
+        function getData(data) {
+
+            var editorData = data;
+
+            editorData = editorData.replace(/<p>/g, '');
+            editorData = editorData.replace(/<\/p>/g, '\n');
+
+            alert(editorData);
+
+            $("#txtarea-Contents").html(editorData);
+            // document.getElementById("txtarea-Contents").innerHTML = editorData;
+
+            $("#txtarea-Contents").select();
+            var successful = document.execCommand('copy');
+        }
+
+        $("#select-kind").change(function () {
+
+            if ($(this).val() > 0) {
+                console.log($(this).val());
+                $("*:not(#switch-TimeYN):disabled").attr("disabled", false);
+                $("select > option[value=0]").attr("disabled", true);
+                $("#editorArea, #BtnCopy").css("display", "");
+            }
+
+
+        });
+
+        $("#switch-TimeYN").change(function () {
+            // if($(this).prop("checked")){
+            //     alert("time on!");
+            // }else{
+            //     alert("time off!");
+            // }
+
+        });
+
+        /* one date, period date selected */
+        $("input[name=opt-VacDate]").change(function () {
+            console.log($(this).val());
+
+            if ($(this).val() == "period") {
+                $("#periodDate").css("display", "");
+                $("#oneDate").css("display", "none");
+            } else if ($(this).val() == "one") {
+                $("#oneDate").css("display", "");
+                $("#periodDate").css("display", "none");
+            }
+        });
+
+        /* one date, period date selected */
+        $("input[name=opt-Contact]").change(function () {
+            console.log($(this).val());
+
+            if ($(this).val() == "other") {
+                $("#contact-other").css("display", "");
+                $("#contact-self").css("display", "none");
+            } else if ($(this).val() == "self") {
+                $("#contact-self").css("display", "");
+                $("#contact-other").css("display", "none");
+            }
+        });
+
+        /* data change */
+        $("#select-kind").change(function () {
+
+            if ($(this).val() == 1) {
+
+                setPTOMsg($(this).val());
+
+            } else if ($(this).val() == 2) {
+                editor.setData("skjdhfsdkjfhjksdfh222222");
+            } else if ($(this).val() == 3) {
+                editor.setData("skjdhfsdkjfhjksdfh333333");
+            } else {
+                editor.setData("");
+            }
+        });
+        
+        function getMsg(data) {
+
+            var msg = "<p>Think you for your email.</p><p>"
+                + "</p><p>I will take PTO on " + data.ptoDate + ", resume working on " + data.reDate + ".</p>" + "<p>If any urgent case during my absence, please contact 연락처 (사람이름 / 연락처).</p>"
+                + "<p>Otherwise, I will respond to your email as soon as I can, when I return.</p>"
+                + "<p></p>"
+                + "<p>Thank you for your patience.</p>";
+            return msg;
+        }
+
+        function setPTOMsg(mgsType) {
+
+            var date = datepicker.getDate();
+            var ptoDate = moment(date).format('YYYY-MM-DD ddd');
+
+            console.log(moment(date).format('d'));
+
+            var weekNo = moment(date).format('d');
+
+            console.log("before" + weekNo);
+
+            if (weekNo > 0) {
+                weekNo = 7 - weekNo;
+                weekNo++;
+            }
+
+            var reDate = moment(date).add(weekNo, "days").format('YYYY-MM-DD ddd');
+
+            paramData = { "msgType": mgsType, "ptoDate": ptoDate, "reDate": reDate, "dateType": "one" }
+            editor.setData(getMsg(paramData));
+        };
+
+        /* data change */
+        $("#date-one").change(function () {
+
+            console.log($(".tui-ico-date").text() );
+            // if ($(this).val() == 1) {
+
+            //     setPTOMsg($(this).val());
+
+            // } else if ($(this).val() == 2) {
+            //     editor.setData("skjdhfsdkjfhjksdfh222222");
+            // } else if ($(this).val() == 3) {
+            //     editor.setData("skjdhfsdkjfhjksdfh333333");
+            // } else {
+            //     editor.setData("");
+            // }
+        });
+    </script>
 </body>
+
 </html>
